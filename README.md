@@ -18,3 +18,7 @@ The Game of Life is an imaginary robot game (cellular automaton) made by the Bri
 ![](https://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif)
 
 ![](https://upload.wikimedia.org/wikipedia/commons/e/ec/Conways_game_of_life_breeder.png)
+
+## Try this:
+You (God) can add and remove cells while the universe is emulating allowing you to directly change the cells in real time.
+Drawing a Gosper glider gun, the universe wraps around so you can see some pretty cool gliders flying around!
