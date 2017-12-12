@@ -1,6 +1,7 @@
 # [John Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life "Wiki Article")
 
 ![](https://i.gyazo.com/0b468f84300495031ecb9693b35ee6cb.png)
+*Left clicks to bring cells to life, Right click to kill off live cells.
 
 The Game of Life is an imaginary robot game (cellular automaton) made by the British mathematician John Horton Conway in 1970.
 
