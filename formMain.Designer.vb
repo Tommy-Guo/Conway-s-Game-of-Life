@@ -33,6 +33,8 @@ Partial Class formMain
         Me.lblMS = New System.Windows.Forms.Label()
         Me.lblGenerationCount = New System.Windows.Forms.Label()
         Me.Universe1 = New Conways_Game_of_Life.universe()
+        Me.btnExport = New System.Windows.Forms.Button()
+        Me.btnImport = New System.Windows.Forms.Button()
         CType(Me.numTimerValue, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -57,6 +59,7 @@ Partial Class formMain
         '
         'btnStepStop
         '
+        Me.btnStepStop.Enabled = False
         Me.btnStepStop.Font = New System.Drawing.Font("Consolas", 9.0!)
         Me.btnStepStop.Location = New System.Drawing.Point(156, 376)
         Me.btnStepStop.Name = "btnStepStop"
@@ -77,7 +80,7 @@ Partial Class formMain
         Me.numTimerValue.Name = "numTimerValue"
         Me.numTimerValue.Size = New System.Drawing.Size(54, 20)
         Me.numTimerValue.TabIndex = 5
-        Me.numTimerValue.Value = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.numTimerValue.Value = New Decimal(New Integer() {10, 0, 0, 0})
         '
         'btnRestart
         '
@@ -126,11 +129,31 @@ Partial Class formMain
         Me.Universe1.Text = "Universe1"
         Me.Universe1.universeSize = New System.Drawing.Size(160, 71)
         '
+        'btnExport
+        '
+        Me.btnExport.Location = New System.Drawing.Point(300, 375)
+        Me.btnExport.Name = "btnExport"
+        Me.btnExport.Size = New System.Drawing.Size(75, 23)
+        Me.btnExport.TabIndex = 11
+        Me.btnExport.Text = "Export"
+        Me.btnExport.UseVisualStyleBackColor = True
+        '
+        'btnImport
+        '
+        Me.btnImport.Location = New System.Drawing.Point(221, 375)
+        Me.btnImport.Name = "btnImport"
+        Me.btnImport.Size = New System.Drawing.Size(75, 23)
+        Me.btnImport.TabIndex = 12
+        Me.btnImport.Text = "Import"
+        Me.btnImport.UseVisualStyleBackColor = True
+        '
         'formMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(823, 404)
+        Me.Controls.Add(Me.btnImport)
+        Me.Controls.Add(Me.btnExport)
         Me.Controls.Add(Me.Universe1)
         Me.Controls.Add(Me.lblGenerationCount)
         Me.Controls.Add(Me.numTimerValue)
@@ -157,5 +180,7 @@ Partial Class formMain
     Friend WithEvents lblMS As System.Windows.Forms.Label
     Friend WithEvents lblGenerationCount As System.Windows.Forms.Label
     Friend WithEvents Universe1 As Conways_Game_of_Life.universe
+    Friend WithEvents btnExport As System.Windows.Forms.Button
+    Friend WithEvents btnImport As System.Windows.Forms.Button
 
 End Class

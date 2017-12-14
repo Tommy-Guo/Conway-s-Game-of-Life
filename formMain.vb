@@ -1,8 +1,10 @@
-﻿Public Class formMain
+﻿Imports System.IO
+
+Public Class formMain
 
     Private Sub btnNextStep_Click(sender As Object, e As EventArgs) Handles btnNextStep.Click
         'We will tell the universe to go to the next generation.
-        Universe1.nextGeneration() 
+        Universe1.nextGeneration()
         'Updates the generation count label.
         updateGenerationLabel()
     End Sub
@@ -10,14 +12,24 @@
     Private Sub btnStartStep_Click(sender As Object, e As EventArgs) Handles btnStartStep.Click
         'Start auto second by second evolution
         universeTime.Start()
+        'Enables/Disables buttons
+        updateBtnStartStop()
+    End Sub
+
+    Private Sub updateBtnStartStop()
+        'Enables/Disables buttons
+        btnStartStep.Enabled = IIf(universeTime.Enabled, False, True)
+        btnStepStop.Enabled = IIf(universeTime.Enabled, True, False)
     End Sub
 
     Private Sub btnStepStop_Click(sender As Object, e As EventArgs) Handles btnStepStop.Click
         'Stop auto second by second evolution
         universeTime.Stop()
+        'Enables/Disables buttons
+        updateBtnStartStop()
     End Sub
 
-    Private Sub stepTimer_Tick(sender As Object, e As EventArgs) Handles universeTime.Tick
+    Private Sub universeTime_Tick(sender As Object, e As EventArgs) Handles universeTime.Tick
         'This timer speeds up time in the universe.
         Universe1.nextGeneration()
         'Updates the generation count label.
@@ -35,12 +47,36 @@
         Universe1.clearArrays() 'Clears the universe cell arrays. This is what sets every cell as dead.
         Universe1.Invalidate() 'Not really necessary but redraws just incase.
         updateGenerationLabel() 'Updates the label to the new population count which will be 0 because everyone is dead.
+        updateBtnStartStop() 'Enables/Disables buttons
     End Sub
 
     Private Sub updateGenerationLabel()
         'Updating the generation count label.
         lblGenerationCount.Text = String.Format("Universe Generations: {0}", Universe1.Generations)
-    End Sub 
+    End Sub
+
+    Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
+        'Create save dialog with .txt only filter
+        Dim nSfd As New SaveFileDialog With {.Filter = "Text File|.txt"}
+        If nSfd.ShowDialog = Windows.Forms.DialogResult.OK Then
+            'If use sucessfully exits the dialog the universe will save
+            Universe1.export(nSfd.FileName)
+            'Prompt the user their world has saved.
+            MsgBox("World Saved!", MsgBoxStyle.OkOnly, "Your world has been saved!")
+        End If
+    End Sub
+
+    Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
+        'Prompt user to confirm the world override.
+        Dim confirmation As DialogResult = MsgBox("Are you sure you would like to import a external world?" & vbNewLine & " Your current world will be deleted.", MsgBoxStyle.YesNoCancel, "Are you sure?")
+        If confirmation = Windows.Forms.DialogResult.Yes Then
+            'If user sucessfully exits the dialog the world will be imported
+            Dim nOfd As New OpenFileDialog With {.Filter = "Text File|.txt"}
+            If nOfd.ShowDialog = Windows.Forms.DialogResult.OK Then
+                Universe1.import(nOfd.FileName)
+            End If
+        End If
+    End Sub
 End Class
 
 Public Class universe
@@ -75,10 +111,10 @@ Public Class universe
         End Set
     End Property
 #End Region
-     
+
 #Region "Janitorial stuff"
     Sub New()
-        DoubleBuffered = True 
+        DoubleBuffered = True
     End Sub
 
     Public Sub clearArrays()
@@ -92,7 +128,7 @@ Public Class universe
         _generations = 0
     End Sub
 #End Region
-     
+
 #Region "Drawing Control"
     Protected Overrides Sub OnPaint(e As PaintEventArgs)
         MyBase.OnPaint(e)
@@ -182,7 +218,7 @@ Public Class universe
     End Sub
 #End Region
 
-#Region "The only public function"
+#Region "The only one public function"
     Public Sub nextGeneration()
         For y As Integer = 0 To _universeSize.Height - 1
             For x As Integer = 0 To _universeSize.Width - 1
@@ -193,12 +229,12 @@ Public Class universe
         Invalidate()
     End Sub
 #End Region
-     
+
 #Region "Mouse move/click detection to toggle cell status."
     Protected Overrides Sub OnMouseMove(e As MouseEventArgs)
         MyBase.OnMouseMove(e)
         'If you wave your magic wand the right way, you get to bring creatures to life.
-        If Math.Floor(e.X / cellSize.Width) < Width And Math.Floor(e.Y / cellSize.Height) < Height Then
+        If Math.Floor(e.X / cellSize.Width) < Width And Math.Floor(e.Y / cellSize.Height) < Height And (e.Button = Windows.Forms.MouseButtons.Left Or e.Button = Windows.Forms.MouseButtons.Right) Then
             'Or accidently kill them :3
             cells(Math.Floor(e.X / cellSize.Width), Math.Floor(e.Y / cellSize.Height)).status = IIf(e.Button = Windows.Forms.MouseButtons.Left, status.Alive, status.Dead)
             Invalidate()
@@ -210,6 +246,36 @@ Public Class universe
         OnMouseMove(New MouseEventArgs(e.Button, 1, e.X, e.Y, e.Delta))
     End Sub
 #End Region
+
+#Region "Import/Export World"
+    Public Sub import(filename As String)
+        clearArrays() 'Start with a fresh canvas.
+        Dim importedCells() As String = File.ReadAllLines(filename) 'Reads data from text file
+        For Each cellData As String In importedCells
+            cells(cellData.Split("-"c)(0), cellData.Split("-"c)(1)).status = status.Alive
+            'Set the imported cells
+        Next
+        Invalidate() 'Redraw the world to show the imported world
+    End Sub
+    Public Sub export(filename As String)
+        Dim aliveCells As New List(Of cell)
+        For y As Integer = 0 To _universeSize.Height - 1
+            For x As Integer = 0 To _universeSize.Width - 1
+                If cells(x, y).status = status.Alive Then
+                    aliveCells.Add(cells(x, y)) 'Get a list of all cells alive
+                End If
+            Next
+        Next
+
+        Dim sw As StreamWriter = File.CreateText(filename) 'Create and open new text file
+        For Each cell As cell In aliveCells
+            sw.WriteLine(String.Format("{0}-{1}", cell.location.X, cell.location.Y))
+            'Write data to the text file.
+        Next
+        sw.Close()
+    End Sub
+#End Region
+
 End Class
 
 Public Class cell
