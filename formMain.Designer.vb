@@ -121,7 +121,7 @@ Partial Class formMain
         Me.Universe1.cellSize = New System.Drawing.Size(5, 5)
         Me.Universe1.Location = New System.Drawing.Point(10, 12)
         Me.Universe1.Name = "Universe1"
-        Me.Universe1.Size = New System.Drawing.Size(801, 356)
+        Me.Universe1.Size = New System.Drawing.Size(801, 351)
         Me.Universe1.TabIndex = 10
         Me.Universe1.Text = "Universe1"
         Me.Universe1.universeSize = New System.Drawing.Size(160, 71)
