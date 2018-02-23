@@ -28,8 +28,29 @@ Public Class formMain
         'Enables/Disables buttons
         updateBtnStartStop()
     End Sub
+    
+ Public Sub colorGeneration()
+        'For random color feature. -asakaz
+        Dim A As Integer
+        Dim R As Integer
+        Dim G As Integer
+        Dim b As Integer
+        Randomize()
+        A = CInt(Int((254 * Rnd()) + 0))
+        Randomize()
+        R = CInt(Int((254 * Rnd()) + 0))
+        Randomize()
+        G = CInt(Int((254 * Rnd()) + 0))
+        Randomize()
+        b = CInt(Int((254 * Rnd()) + 0))
 
+        Universe1.aliveColor = Color.FromArgb(A, R, G, b)
+
+    End Sub
+    
     Private Sub universeTime_Tick(sender As Object, e As EventArgs) Handles universeTime.Tick
+        'Sets next random color of the universe.
+        colorGeneration()
         'This timer speeds up time in the universe.
         Universe1.nextGeneration()
         'Updates the generation count label.
